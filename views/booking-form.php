@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
+?>
 
-if (!empty($errors)): ?>
+<h2>Boka rum</h2>
+
+<?php if (!empty($errors)): ?>
     <ul>
         <?php foreach ($errors as $error): ?>
             <li><?= htmlspecialchars($error) ?></li>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
-
-<h2>Boka rum</h2>
 
 <form method="post" action="">
 
