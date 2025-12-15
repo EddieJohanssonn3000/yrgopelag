@@ -3,6 +3,7 @@
 declare(strict_types=1);
 ?>
 
+
 <h2>Boka rum</h2>
 
 <form method="post" action="">
