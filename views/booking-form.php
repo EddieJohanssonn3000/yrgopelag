@@ -92,25 +92,95 @@ declare(strict_types=1);
 
     <!-- Features -->
     <fieldset>
-        <legend>Välj tillval (features)</legend>
+        <legend>Välj tillval / Features</legend>
 
+        <h4>Water</h4>
         <label>
             <input type="checkbox" name="features[]" value="pool">
-            Pool
+            Pool (Economy $2)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="minibar">
-            Minibar
+            <input type="checkbox" name="features[]" value="scuba_diving">
+            Scuba diving (Basic $5)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="spa">
-            Spa
+            <input type="checkbox" name="features[]" value="olympic_pool">
+            Olympic pool (Premium $10)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="waterpark_fire_minibar">
+            Waterpark with fire & minibar (Superior $17)
+        </label>
+
+        <h4>Games</h4>
+        <label>
+            <input type="checkbox" name="features[]" value="yahtzee">
+            Yahtzee (Economy $2)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="ping_pong">
+            Ping pong table (Basic $5)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="ps5">
+            PS5 (Premium $10)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="casino">
+            Casino (Superior $17)
+        </label>
+
+        <h4>Wheels</h4>
+        <label>
+            <input type="checkbox" name="features[]" value="unicycle">
+            Unicycle (Economy $2)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="bicycle">
+            Bicycle (Basic $5)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="trike">
+            Trike (Premium $10)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="four_wheeled_motorized_beast">
+            Four-wheeled motorized beast (Superior $17)
+        </label>
+
+        <h4>Hotel-specific (Spooky)</h4>
+        <label>
+            <input type="checkbox" name="features[]" value="haunted_house">
+            Haunted house access (Economy $2)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="ghost_tour">
+            Ghost tour (Basic $5)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="seance_with_medium">
+            Séance with medium (Premium $10)
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="cursed_master_suite">
+            Cursed master suite (Superior $17)
         </label>
     </fieldset>
 
     <br>
+
 
 
     <button type="submit">Sök tillgänglighet</button>
