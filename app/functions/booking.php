@@ -6,11 +6,14 @@ function saveBooking(PDO $db, array $data): array
 {
     $errors = [];
 
-    $checkIn  = $data['check_in']  ?? null;
-    $checkOut = $data['check_out'] ?? null;
-    $room     = $data['room']      ?? null;
+    $guestId      = $data['guest_id'] ?? null;
+    $transferCode = $data['transfer_code'] ?? null;
+    $room         = $data['room'] ?? null;
+    $checkIn      = $data['check_in'] ?? null;
+    $checkOut     = $data['check_out'] ?? null;
+    $features     = $data['features'] ?? [];
 
-    if (!$checkIn || !$checkOut || !$room) {
+    if (!$guestId || !$transferCode || !$room || !$checkIn || !$checkOut) {
         $errors[] = 'Alla fält måste fyllas i.';
     }
 
@@ -21,23 +24,28 @@ function saveBooking(PDO $db, array $data): array
     if (!empty($errors)) {
         return [
             'success' => false,
-            'errors' => $errors
+            'errors'  => $errors,
         ];
     }
 
     $stmt = $db->prepare(
-        'INSERT INTO bookings (check_in, check_out, room)
-         VALUES (:check_in, :check_out, :room)'
+        'INSERT INTO bookings
+        (guest_id, transfer_code, room, check_in, check_out, features)
+        VALUES
+        (:guest_id, :transfer_code, :room, :check_in, :check_out, :features)'
     );
 
     $stmt->execute([
-        ':check_in'  => $checkIn,
-        ':check_out' => $checkOut,
-        ':room'      => $room,
+        ':guest_id'      => $guestId,
+        ':transfer_code' => $transferCode,
+        ':room'          => $room,
+        ':check_in'      => $checkIn,
+        ':check_out'     => $checkOut,
+        ':features'      => json_encode($features),
     ]);
 
     return [
-        'success' => true,
-        'booking_id' => (int) $db->lastInsertId()
+        'success'    => true,
+        'booking_id' => (int) $db->lastInsertId(),
     ];
 }

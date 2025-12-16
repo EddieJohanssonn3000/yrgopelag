@@ -90,6 +90,29 @@ declare(strict_types=1);
 
     <br>
 
+    <!-- Features -->
+    <fieldset>
+        <legend>Välj tillval (features)</legend>
+
+        <label>
+            <input type="checkbox" name="features[]" value="pool">
+            Pool
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="minibar">
+            Minibar
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="features[]" value="spa">
+            Spa
+        </label>
+    </fieldset>
+
+    <br>
+
+
     <button type="submit">Sök tillgänglighet</button>
 
 </form>
