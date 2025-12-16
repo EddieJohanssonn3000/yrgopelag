@@ -14,7 +14,31 @@ declare(strict_types=1);
     </ul>
 <?php endif; ?>
 
-<form method="post" action="">
+<form method="post" action="index.php">
+
+    <!-- Guest_id -->
+    <div>
+        <label for="guest_id">Guest ID</label><br>
+        <input
+            type="text"
+            id="guest_id"
+            name="guest_id"
+            required>
+    </div>
+
+    <br>
+
+    <!-- Transfer_code -->
+    <div>
+        <label for="transfer_code">Transfer Code</label><br>
+        <input
+            type="text"
+            id="transfer_code"
+            name="transfer_code"
+            required>
+    </div>
+
+    <br>
 
     <!-- Check-in -->
     <div>
