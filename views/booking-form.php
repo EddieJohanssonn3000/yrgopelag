@@ -78,17 +78,17 @@ declare(strict_types=1);
         <label>
             <input type="radio" name="room" value="budget" <?= (($_POST['room'] ?? '') === 'budget') ? 'checked' : '' ?>
                 required>
-            Budget
+            Budget 1$
         </label><br>
 
         <label>
             <input type="radio" name="room" value="standard" <?= (($_POST['room'] ?? '') === 'standard') ? 'checked' : '' ?>>
-            Standard
+            Standard 2$
         </label><br>
 
         <label>
             <input type="radio" name="room" value="luxury" <?= (($_POST['room'] ?? '') === 'luxury') ? 'checked' : '' ?>>
-            Luxury
+            Luxury 4$
         </label>
     </fieldset>
 
@@ -165,7 +165,7 @@ declare(strict_types=1);
         </label>
 
         <!-- Hotel-specific (Spooky) -->
-        <h4>Hotel-specific (Spooky)</h4>
+        <h4>Spooky</h4>
         <label>
             <input type="checkbox" name="features[]" value="haunted_house" <?= in_array('haunted_house', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Haunted house access (Economy $2)
