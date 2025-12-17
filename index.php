@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'features' => $_POST['features'] ?? [],
     ];
 
-    // ✅ ALLTID räkna pris
     $totalPrice = calculateTotalPrice(
         $data['room'],
         $data['check_in'],
@@ -28,19 +27,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['features']
     );
 
-    // ✅ 1. PRICE PREVIEW
     if ($_POST['action'] === 'preview') {
         require __DIR__ . '/views/booking-form.php';
         require __DIR__ . '/views/footer.php';
         exit;
     }
 
-    // ✅ 2. MAKE RESERVATION
     if ($_POST['action'] === 'book') {
 
         $result = saveBooking($db, $data);
 
         if ($result['success']) {
+
+            $checkIn  = $data['check_in'];
+            $checkOut = $data['check_out'];
+            $room     = $data['room'];
+            $features = $data['features'];
+            $guestId  = $data['guest_id'];
+            $total    = $totalPrice;
+
             require __DIR__ . '/views/booking-result.php';
         } else {
             $errors = $result['errors'];
