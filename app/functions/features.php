@@ -15,9 +15,9 @@ function getTierPrices(): array
 function getRoomPrices(): array
 {
     return [
-        'budget'   => 2,
-        'standard' => 5,
-        'luxury'   => 10,
+        'budget'   => 1,
+        'standard' => 2,
+        'luxury'   => 4,
     ];
 }
 
@@ -81,17 +81,4 @@ function calculateNights(string $checkIn, string $checkOut): int
     return (int) (
         (strtotime($checkOut) - strtotime($checkIn)) / 86400
     );
-}
-
-function calculateTotalPrice(
-    string $room,
-    string $checkIn,
-    string $checkOut,
-    array $features
-): int {
-    $nights = calculateNights($checkIn, $checkOut);
-    $roomPrice = calculateRoomPrice($room);
-    $featuresPrice = calculateFeaturesPrice($features);
-
-    return ($roomPrice + $featuresPrice) * $nights;
 }

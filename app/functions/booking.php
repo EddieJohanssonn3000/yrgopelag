@@ -51,3 +51,38 @@ function saveBooking(PDO $db, array $data): array
         'booking_id' => (int) $db->lastInsertId(),
     ];
 }
+
+function calculateTotalPrice(
+    string $room,
+    string $checkIn,
+    string $checkOut,
+    array $selectedFeatures
+): int {
+    $total = 0;
+
+
+    $roomPrices = getRoomPrices();
+    $pricePerNight = $roomPrices[$room] ?? 0;
+
+    $nights = (strtotime($checkOut) - strtotime($checkIn)) / 86400;
+    if ($nights < 1) {
+        $nights = 1;
+    }
+
+    $total += $pricePerNight * $nights;
+
+
+    $tierPrices = getTierPrices();
+    $features = getAvailableFeatures();
+
+    foreach ($selectedFeatures as $featureKey) {
+        foreach ($features as $category) {
+            if (isset($category[$featureKey])) {
+                $tier = $category[$featureKey];
+                $total += $tierPrices[$tier];
+            }
+        }
+    }
+
+    return $total;
+}

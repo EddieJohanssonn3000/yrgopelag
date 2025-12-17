@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['features']
     );
 
+    $totalPrice = $totalPrice;
+
     $result = saveBooking($db, $data);
 
     if ($result['success']) {
