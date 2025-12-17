@@ -18,7 +18,7 @@ declare(strict_types=1);
 
     <!-- Guest_id -->
     <div>
-        <label for="guest_id">Guest ID</label><br>
+        <label for="guest_id">Name (guest ID)</label><br>
         <input
             type="text"
             id="guest_id"

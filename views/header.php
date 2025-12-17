@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPOOKY ISLAND</title>
-    <link rel="stylesheet" href="/assets/styles/header.css">
+    <link rel="stylesheet" href="./assets/styles/header.css?ver=1">
 </head>
 
 <body>
