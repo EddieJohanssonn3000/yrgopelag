@@ -12,6 +12,15 @@ function getTierPrices(): array
     ];
 }
 
+function getRoomPrices(): array
+{
+    return [
+        'budget'   => 2,
+        'standard' => 5,
+        'luxury'   => 10,
+    ];
+}
+
 function getAvailableFeatures(): array
 {
     return [
@@ -40,4 +49,49 @@ function getAvailableFeatures(): array
             'cursed_master_suite' => 'superior',
         ],
     ];
+}
+
+function calculateFeaturesPrice(array $selectedFeatures): int
+{
+    $availableFeatures = getAvailableFeatures();
+    $tierPrices = getTierPrices();
+
+    $total = 0;
+
+    foreach ($selectedFeatures as $feature) {
+        foreach ($availableFeatures as $category) {
+            if (isset($category[$feature])) {
+                $tier = $category[$feature];
+                $total += $tierPrices[$tier];
+            }
+        }
+    }
+
+    return $total;
+}
+
+function calculateRoomPrice(string $room): int
+{
+    $tiers = getTierPrices();
+    return $tiers[$room] ?? 0;
+}
+
+function calculateNights(string $checkIn, string $checkOut): int
+{
+    return (int) (
+        (strtotime($checkOut) - strtotime($checkIn)) / 86400
+    );
+}
+
+function calculateTotalPrice(
+    string $room,
+    string $checkIn,
+    string $checkOut,
+    array $features
+): int {
+    $nights = calculateNights($checkIn, $checkOut);
+    $roomPrice = calculateRoomPrice($room);
+    $featuresPrice = calculateFeaturesPrice($features);
+
+    return ($roomPrice + $featuresPrice) * $nights;
 }

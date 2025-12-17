@@ -20,7 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'features'      => $_POST['features'] ?? [],
     ];
 
-    $totalPrice = calculateTotalPrice($data['features']);
+    $totalPrice = calculateTotalPrice(
+        $data['room'],
+        $data['check_in'],
+        $data['check_out'],
+        $data['features']
+    );
 
     $result = saveBooking($db, $data);
 
