@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/features.php';
+
 function saveBooking(PDO $db, array $data): array
 {
     $errors = [];
@@ -48,4 +50,23 @@ function saveBooking(PDO $db, array $data): array
         'success'    => true,
         'booking_id' => (int) $db->lastInsertId(),
     ];
+}
+
+function calculateTotalPrice(array $selectedFeatures): int
+{
+    $tiers = getTierPrices();
+    $features = getAvailableFeatures();
+
+    $total = 0;
+
+    foreach ($selectedFeatures as $featureKey) {
+        foreach ($features as $category) {
+            if (isset($category[$featureKey])) {
+                $tier = $category[$featureKey];
+                $total += $tiers[$tier];
+            }
+        }
+    }
+
+    return $total;
 }
