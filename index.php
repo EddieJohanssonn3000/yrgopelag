@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/app/config/database.php';
-require __DIR__ . '/app/functions/booking.php';
+require_once __DIR__ . '/app/config/database.php';
+require_once __DIR__ . '/app/functions/booking.php';
+require_once __DIR__ . '/app/functions/features.php';
+
 
 require __DIR__ . '/views/header.php';
 
@@ -18,16 +20,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'features'      => $_POST['features'] ?? [],
     ];
 
+    $totalPrice = calculateTotalPrice($data['features']);
+
     $result = saveBooking($db, $data);
 
     if ($result['success']) {
-        $bookingId    = $result['booking_id'];
-        $checkIn      = $data['check_in'];
-        $checkOut     = $data['check_out'];
-        $room         = $data['room'];
-        $guestId      = $data['guest_id'];
+
+
+        $bookingId   = $result['booking_id'];
+        $checkIn     = $data['check_in'];
+        $checkOut    = $data['check_out'];
+        $room        = $data['room'];
+        $guestId     = $data['guest_id'];
         $transferCode = $data['transfer_code'];
-        $features     = $data['features'];
+        $features    = $data['features'];
 
         require __DIR__ . '/views/booking-result.php';
     } else {
@@ -38,6 +44,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     require __DIR__ . '/views/booking-form.php';
 }
-
 
 require __DIR__ . '/views/footer.php';
