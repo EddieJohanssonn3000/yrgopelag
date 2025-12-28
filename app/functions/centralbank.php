@@ -2,24 +2,104 @@
 
 declare(strict_types=1);
 
-/**
- * Fake-check: låtsas att transferCode är giltig
- */
 function centralbankValidateTransferCode(
     string $transferCode,
     int $amount
 ): bool {
-    // TEMP: Allt som inte är tomt är giltigt
-    return trim($transferCode) !== '' && $amount > 0;
+    $config = require __DIR__ . '/../config/centralbank.php';
+
+    $payload = json_encode([
+        'transferCode' => $transferCode,
+        'amount'       => $amount,
+    ]);
+
+    $ch = curl_init($config['base_url'] . '/validate');
+
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            'X-User: ' . $config['user'],
+            'X-Api-Key: ' . $config['api_key'],
+        ],
+        CURLOPT_POSTFIELDS     => $payload,
+    ]);
+
+    $response = curl_exec($ch);
+    $status   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    curl_close($ch);
+
+    if ($status !== 200) {
+        return false;
+    }
+
+    $data = json_decode($response, true);
+
+    return ($data['valid'] ?? false) === true;
 }
 
-/**
- * Fake-deposit: låtsas att vi får pengar
- */
-function centralbankDeposit(
+
+
+function centralbankCreateReceipt(
     string $transferCode,
-    int $amount
+    int $amount,
+    string $reference
 ): bool {
-    // TEMP: alltid OK
-    return true;
+    $config = require __DIR__ . '/../config/centralbank.php';
+
+    $payload = json_encode([
+        'transferCode' => $transferCode,
+        'amount'       => $amount,
+        'reference'    => $reference,
+    ]);
+
+    $ch = curl_init($config['base_url'] . '/receipt');
+
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            'X-User: ' . $config['user'],
+            'X-Api-Key: ' . $config['api_key'],
+        ],
+        CURLOPT_POSTFIELDS     => $payload,
+    ]);
+
+    curl_exec($ch);
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $status === 201;
+}
+
+function centralbankDeposit(
+    string $transferCode
+): bool {
+    $config = require __DIR__ . '/../config/centralbank.php';
+
+    $payload = json_encode([
+        'transferCode' => $transferCode,
+    ]);
+
+    $ch = curl_init($config['base_url'] . '/deposit');
+
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            'X-User: ' . $config['user'],
+            'X-Api-Key: ' . $config['api_key'],
+        ],
+        CURLOPT_POSTFIELDS     => $payload,
+    ]);
+
+    curl_exec($ch);
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $status === 200;
 }

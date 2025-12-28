@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (($_POST['action'] ?? null) === 'book') {
 
+        // 1. Validera transfer code
         $isValidPayment = centralbankValidateTransferCode(
             $data['transfer_code'],
             $totalPrice
@@ -43,6 +44,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$isValidPayment) {
             $errors[] = 'Payment could not be verified.';
+            require __DIR__ . '/views/booking-form.php';
+            require __DIR__ . '/views/footer.php';
+            exit;
+        }
+
+        // 2. Skapa receipt
+        $receiptCreated = centralbankCreateReceipt(
+            $data['transfer_code'],
+            $totalPrice,
+            'Booking for Spooky Hotel'
+        );
+
+        if (!$receiptCreated) {
+            $errors[] = 'Could not create receipt.';
+            require __DIR__ . '/views/booking-form.php';
+            require __DIR__ . '/views/footer.php';
+            exit;
+        }
+
+        // 3. Gör deposit (dra pengar)
+        $depositSuccess = centralbankDeposit($data['transfer_code']);
+
+        if (!$depositSuccess) {
+            $errors[] = 'Payment failed during deposit.';
             require __DIR__ . '/views/booking-form.php';
             require __DIR__ . '/views/footer.php';
             exit;
