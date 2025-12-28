@@ -35,8 +35,7 @@ declare(strict_types=1);
         <input
             type="text"
             id="transfer_code"
-            name="transfer_code"
-            required>
+            name="transfer_code">
     </div>
 
     <br>

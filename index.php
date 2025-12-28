@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
+require __DIR__ . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 require_once __DIR__ . '/app/config/database.php';
 require_once __DIR__ . '/app/functions/booking.php';
 require_once __DIR__ . '/app/functions/features.php';
+require_once __DIR__ . '/app/functions/centralbank.php';
 
-
-require __DIR__ . '/app/functions/centralbank.php';
 require __DIR__ . '/views/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -34,61 +38,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (($_POST['action'] ?? null) === 'book') {
+    if (($_POST['action'] ?? null) === 'book' && empty($data['transfer_code'])) {
+        $errors[] = 'Transfer code is required to make a reservation.';
+        require __DIR__ . '/views/booking-form.php';
+        require __DIR__ . '/views/footer.php';
+        exit;
+    }
 
-        // 1. Validera transfer code
-        $isValidPayment = centralbankValidateTransferCode(
-            $data['transfer_code'],
-            $totalPrice
-        );
 
-        if (!$isValidPayment) {
-            $errors[] = 'Payment could not be verified.';
-            require __DIR__ . '/views/booking-form.php';
-            require __DIR__ . '/views/footer.php';
-            exit;
-        }
 
-        // 2. Skapa receipt
-        $receiptCreated = centralbankCreateReceipt(
-            $data['transfer_code'],
-            $totalPrice,
-            'Booking for Spooky Hotel'
-        );
+    // 1. Validera transfer code
+    $isValidPayment = centralbankValidateTransferCode(
+        $data['transfer_code'],
+        $totalPrice
+    );
 
-        if (!$receiptCreated) {
-            $errors[] = 'Could not create receipt.';
-            require __DIR__ . '/views/booking-form.php';
-            require __DIR__ . '/views/footer.php';
-            exit;
-        }
+    if (!$isValidPayment) {
+        $errors[] = 'Payment could not be verified.';
+        require __DIR__ . '/views/booking-form.php';
+        require __DIR__ . '/views/footer.php';
+        exit;
+    }
 
-        // 3. Gör deposit (dra pengar)
-        $depositSuccess = centralbankDeposit($data['transfer_code']);
+    // 2. Skapa receipt
+    $receiptCreated = centralbankCreateReceipt(
+        $data['transfer_code'],
+        $totalPrice,
+        'Booking for Spooky Hotel'
+    );
 
-        if (!$depositSuccess) {
-            $errors[] = 'Payment failed during deposit.';
-            require __DIR__ . '/views/booking-form.php';
-            require __DIR__ . '/views/footer.php';
-            exit;
-        }
+    if (!$receiptCreated) {
+        $errors[] = 'Could not create receipt.';
+        require __DIR__ . '/views/booking-form.php';
+        require __DIR__ . '/views/footer.php';
+        exit;
+    }
 
-        $result = saveBooking($db, $data);
+    // 3. Gör deposit (dra pengar)
+    $depositSuccess = centralbankDeposit($data['transfer_code']);
 
-        if ($result['success']) {
+    if (!$depositSuccess) {
+        $errors[] = 'Payment failed during deposit.';
+        require __DIR__ . '/views/booking-form.php';
+        require __DIR__ . '/views/footer.php';
+        exit;
+    }
 
-            $checkIn  = $data['check_in'];
-            $checkOut = $data['check_out'];
-            $room     = $data['room'];
-            $features = $data['features'];
-            $guestId  = $data['guest_id'];
-            $total    = $totalPrice;
+    $result = saveBooking($db, $data);
 
-            require __DIR__ . '/views/booking-result.php';
-        } else {
-            $errors = $result['errors'];
-            require __DIR__ . '/views/booking-form.php';
-        }
+    if ($result['success']) {
+
+        $checkIn  = $data['check_in'];
+        $checkOut = $data['check_out'];
+        $room     = $data['room'];
+        $features = $data['features'];
+        $guestId  = $data['guest_id'];
+        $total    = $totalPrice;
+
+        require __DIR__ . '/views/booking-result.php';
+    } else {
+        $errors = $result['errors'];
+        require __DIR__ . '/views/booking-form.php';
     }
 } else {
     require __DIR__ . '/views/booking-form.php';
