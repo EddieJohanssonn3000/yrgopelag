@@ -71,18 +71,17 @@ function calculateTotalPrice(
 
     $total += $pricePerNight * $nights;
 
-
     $tierPrices = getTierPrices();
-    $features = getAvailableFeatures();
 
-    foreach ($selectedFeatures as $featureKey) {
-        foreach ($features as $category) {
-            if (isset($category[$featureKey])) {
-                $tier = $category[$featureKey];
-                $total += $tierPrices[$tier];
-            }
+    foreach ($selectedFeatures as $feature) {
+        // Ex: "wheels:economy"
+        [$category, $tier] = explode(':', $feature);
+
+        if (isset($tierPrices[$tier])) {
+            $total += $tierPrices[$tier];
         }
     }
+
 
     return $total;
 }

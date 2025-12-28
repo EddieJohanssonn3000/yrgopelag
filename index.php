@@ -15,7 +15,6 @@ require_once __DIR__ . '/app/functions/centralbank.php';
 require __DIR__ . '/views/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $data = [
         'guest_id' => $_POST['guest_id'] ?? null,
         'transfer_code' => $_POST['transfer_code'] ?? null,
@@ -45,9 +44,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // ===== 1. Datum → antal nätter =====
+    $checkInDate = new DateTime($data['check_in']);
+    $checkOutDate = new DateTime($data['check_out']);
+    $nights = $checkInDate->diff($checkOutDate)->days;
 
+    // ===== 2. Rumspris =====
+    $roomPrices = [
+        'budget' => 1,
+        'standard' => 2,
+        'luxury' => 4,
+    ];
+    $roomPrice = $roomPrices[$data['room']];
+    $roomTotal = $roomPrice * $nights;
 
-    // 1. Validera transfer code
+    // ===== 3. Feature-priser =====
+    $tierPrices = [
+        'economy' => 2,
+        'basic' => 5,
+        'premium' => 10,
+        'superior' => 17,
+    ];
+
+    $featuresUsed = [];
+    $featuresTotal = 0;
+
+    if (!empty($data['features'])) {
+        foreach ($data['features'] as $feature) {
+            [$activity, $tier] = explode(':', $feature);
+            $featuresUsed[] = [
+                'activity' => $activity,
+                'tier' => $tier,
+            ];
+        }
+    }
+    $featuresTotal += $tierPrices[$tier];
+
+    // ===== Validera transfer code =====
     $isValidPayment = centralbankValidateTransferCode(
         $data['transfer_code'],
         $totalPrice
@@ -60,12 +93,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // 2. Skapa receipt
+    $guestId  = $data['guest_id'];
+    $checkIn  = $data['check_in'];
+    $checkOut = $data['check_out'];
+
+
+
+    // ===== Skapa receipt =====
     $receiptCreated = centralbankCreateReceipt(
-        $data['transfer_code'],
-        $totalPrice,
-        'Booking for Spooky Hotel'
+        $data['guest_id'],
+        $data['check_in'],
+        $data['check_out'],
+        $featuresUsed,
+        $totalPrice
     );
+
+
 
     if (!$receiptCreated) {
         $errors[] = 'Could not create receipt.';
@@ -74,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // 3. Gör deposit (dra pengar)
+    // ===== Gör deposit =====
     $depositSuccess = centralbankDeposit($data['transfer_code']);
 
     if (!$depositSuccess) {
@@ -84,16 +127,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // ===== Spara bokning =====
     $result = saveBooking($db, $data);
 
     if ($result['success']) {
-
-        $checkIn  = $data['check_in'];
+        $checkIn = $data['check_in'];
         $checkOut = $data['check_out'];
-        $room     = $data['room'];
+        $room = $data['room'];
         $features = $data['features'];
-        $guestId  = $data['guest_id'];
-        $total    = $totalPrice;
+        $guestId = $data['guest_id'];
+        $total = $totalPrice;
 
         require __DIR__ . '/views/booking-result.php';
     } else {

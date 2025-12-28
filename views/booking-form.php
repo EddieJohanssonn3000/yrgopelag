@@ -100,88 +100,104 @@ declare(strict_types=1);
         <!-- Water -->
         <h4>Water</h4>
         <label>
-            <input type="checkbox" name="features[]" value="pool" <?= in_array('pool', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="water:economy"
+                <?= in_array('water:economy', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Pool (Economy $2)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="scuba_diving" <?= in_array('scuba_diving', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="water:basic"
+                <?= in_array('water:basic', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Scuba diving (Basic $5)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="olympic_pool" <?= in_array('olympic_pool', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="water:premium"
+                <?= in_array('water:premium', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Olympic pool (Premium $10)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="waterpark_fire_minibar" <?= in_array('waterpark_fire_minibar', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="water:superior"
+                <?= in_array('water:superior', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Waterpark with fire & minibar (Superior $17)
         </label>
 
         <!-- Games -->
         <h4>Games</h4>
         <label>
-            <input type="checkbox" name="features[]" value="yahtzee" <?= in_array('yahtzee', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="games:economy"
+                <?= in_array('games:economy', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Yahtzee (Economy $2)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="ping_pong" <?= in_array('ping_pong', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="games:basic"
+                <?= in_array('games:basic', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Ping pong table (Basic $5)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="ps5" <?= in_array('ps5', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="games:premium"
+                <?= in_array('games:premium', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             PS5 (Premium $10)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="casino" <?= in_array('casino', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="games:superior"
+                <?= in_array('games:superior', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Casino (Superior $17)
         </label>
 
         <!-- Wheels -->
         <h4>Wheels</h4>
         <label>
-            <input type="checkbox" name="features[]" value="unicycle" <?= in_array('unicycle', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="wheels:economy"
+                <?= in_array('wheels:economy', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Unicycle (Economy $2)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="bicycle" <?= in_array('bicycle', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="wheels:basic"
+                <?= in_array('wheels:basic', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Bicycle (Basic $5)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="trike" <?= in_array('trike', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="wheels:premium"
+                <?= in_array('wheels:premium', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Trike (Premium $10)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="four_wheeled_motorized_beast" <?= in_array('four_wheeled_motorized_beast', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="wheels:superior"
+                <?= in_array('wheels:superior', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Four-wheeled motorized beast (Superior $17)
         </label>
 
         <!-- Hotel-specific (Spooky) -->
         <h4>Spooky</h4>
         <label>
-            <input type="checkbox" name="features[]" value="haunted_house" <?= in_array('haunted_house', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="hotel:economy"
+                <?= in_array('hotel:economy', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Haunted house access (Economy $2)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="ghost_tour" <?= in_array('ghost_tour', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="hotel:basic"
+                <?= in_array('hotel:basic', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Ghost tour (Basic $5)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="seance_with_medium" <?= in_array('seance_with_medium', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="hotel:premium"
+                <?= in_array('hotel:premium', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Séance with medium (Premium $10)
         </label><br>
 
         <label>
-            <input type="checkbox" name="features[]" value="cursed_master_suite" <?= in_array('cursed_master_suite', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+            <input type="checkbox" name="features[]" value="hotel:superior"
+                <?= in_array('hotel:superior', $_POST['features'] ?? []) ? 'checked' : '' ?>>
             Cursed master suite (Superior $17)
         </label>
     </fieldset>
