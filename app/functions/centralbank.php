@@ -27,26 +27,23 @@ function centralbankValidateTransferCode(
 
     $response = curl_exec($ch);
     $status   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    var_dump($status, $response);
-    die;
-
     curl_close($ch);
 
 
     if ($status !== 200) {
-        error_log('Centralbank API error: ' . $response);
+        error_log('Centralbank HTTP error: ' . $response);
         return false;
     }
 
     $data = json_decode($response, true);
 
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log('JSON decode error: ' . json_last_error_msg());
+
+    if (!is_array($data) || ($data['status'] ?? null) !== 'success') {
+        error_log('Centralbank validation failed: ' . $response);
         return false;
     }
 
-    return ($data['valid'] ?? false) === true;
+    return true;
 }
 
 
