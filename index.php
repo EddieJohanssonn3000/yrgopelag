@@ -7,6 +7,7 @@ require_once __DIR__ . '/app/functions/booking.php';
 require_once __DIR__ . '/app/functions/features.php';
 
 
+require __DIR__ . '/app/functions/centralbank.php';
 require __DIR__ . '/views/header.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,13 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['features']
     );
 
-    if ($_POST['action'] === 'preview') {
+    if (($_POST['action'] ?? null) === 'preview') {
         require __DIR__ . '/views/booking-form.php';
         require __DIR__ . '/views/footer.php';
         exit;
     }
 
-    if ($_POST['action'] === 'book') {
+    if (($_POST['action'] ?? null) === 'book') {
+
+        $isValidPayment = centralbankValidateTransferCode(
+            $data['transfer_code'],
+            $totalPrice
+        );
+
+        if (!$isValidPayment) {
+            $errors[] = 'Payment could not be verified.';
+            require __DIR__ . '/views/booking-form.php';
+            require __DIR__ . '/views/footer.php';
+            exit;
+        }
 
         $result = saveBooking($db, $data);
 
