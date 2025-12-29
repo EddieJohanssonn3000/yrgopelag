@@ -84,6 +84,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $checkIn  = $data['check_in'];
     $checkOut = $data['check_out'];
 
+    // ===== Validera transferCode =====
+    if (($_POST['action'] ?? null) === 'book') {
+        $isValidPayment = centralbankValidateTransferCode(
+            $data['transfer_code'],
+            $totalPrice
+        );
+
+        if (!$isValidPayment) {
+            $errors[] = 'Invalid transfer code or incorrect amount. Expected: ' . $totalPrice . ' credits.';
+            require __DIR__ . '/views/booking-form.php';
+            require __DIR__ . '/views/footer.php';
+            exit;
+        }
+    }
+
     // ===== Kontrollera om rum är ledigt =====
     if (!isRoomAvailable($db, $data['room'], $data['check_in'], $data['check_out'])) {
         $errors[] = 'This room is not available for the selected dates.';
