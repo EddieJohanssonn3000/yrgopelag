@@ -52,6 +52,24 @@ function saveBooking(PDO $db, array $data): array
     ];
 }
 
+function isRoomAvailable(PDO $db, string $room, string $checkIn, string $checkOut): bool
+{
+    $stmt = $db->prepare(
+        'SELECT COUNT(*) FROM bookings 
+         WHERE room = :room 
+         AND check_out > :check_in 
+         AND check_in < :check_out'
+    );
+
+    $stmt->execute([
+        ':room' => $room,
+        ':check_in' => $checkIn,
+        ':check_out' => $checkOut,
+    ]);
+
+    return $stmt->fetchColumn() === 0;
+}
+
 function calculateTotalPrice(
     string $room,
     string $checkIn,

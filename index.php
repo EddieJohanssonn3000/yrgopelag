@@ -84,6 +84,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $checkIn  = $data['check_in'];
     $checkOut = $data['check_out'];
 
+    // ===== Kontrollera om rum är ledigt =====
+    if (!isRoomAvailable($db, $data['room'], $data['check_in'], $data['check_out'])) {
+        $errors[] = 'This room is not available for the selected dates.';
+        require __DIR__ . '/views/booking-form.php';
+        require __DIR__ . '/views/footer.php';
+        exit;
+    }
+
     // ===== Gör deposit =====
     $depositSuccess = centralbankDeposit($data['transfer_code']);
 
