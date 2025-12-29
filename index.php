@@ -76,30 +76,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'activity' => $activity,
                 'tier' => $tier,
             ];
+            $featuresTotal += $tierPrices[$tier];
         }
-    }
-    $featuresTotal += $tierPrices[$tier];
-
-    // ===== Validera transfer code =====
-    $isValidPayment = centralbankValidateTransferCode(
-        $data['transfer_code'],
-        $totalPrice
-    );
-
-    if (!$isValidPayment) {
-        $errors[] = 'Payment could not be verified.';
-        require __DIR__ . '/views/booking-form.php';
-        require __DIR__ . '/views/footer.php';
-        exit;
     }
 
     $guestId  = $data['guest_id'];
     $checkIn  = $data['check_in'];
     $checkOut = $data['check_out'];
 
+    // ===== Gör deposit =====
+    $depositSuccess = centralbankDeposit($data['transfer_code']);
 
+    if (!$depositSuccess) {
+        $errors[] = 'Payment failed during deposit.';
+        require __DIR__ . '/views/booking-form.php';
+        require __DIR__ . '/views/footer.php';
+        exit;
+    }
 
-    // ===== Skapa receipt =====
+    // ===== Skapa receipt EFTER deposit =====
     $receiptCreated = centralbankCreateReceipt(
         $data['guest_id'],
         $data['check_in'],
@@ -108,20 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $totalPrice
     );
 
-
-
     if (!$receiptCreated) {
         $errors[] = 'Could not create receipt.';
-        require __DIR__ . '/views/booking-form.php';
-        require __DIR__ . '/views/footer.php';
-        exit;
-    }
-
-    // ===== Gör deposit =====
-    $depositSuccess = centralbankDeposit($data['transfer_code']);
-
-    if (!$depositSuccess) {
-        $errors[] = 'Payment failed during deposit.';
         require __DIR__ . '/views/booking-form.php';
         require __DIR__ . '/views/footer.php';
         exit;

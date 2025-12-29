@@ -103,31 +103,37 @@ function centralbankDeposit(
 ): bool {
     $config = require __DIR__ . '/../config/centralbank.php';
 
-    if (empty($config['user']) || empty($config['api_key'])) {
-        error_log('Centralbank configuration error: Missing user or API key');
+    if (empty($config['user'])) {
+        error_log('Centralbank configuration error: Missing user');
         return false;
     }
 
     $payload = json_encode([
         'transferCode' => $transferCode,
+        'user' => $config['user'],
     ]);
 
-    $ch = curl_init($config['base_url'] . '/deposit');
+    $url = $config['base_url'] . '/deposit';
 
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_HTTPHEADER     => [
-            'Content-Type: application/json',
-            'X-User: ' . $config['user'],
-            'X-Api-Key: ' . $config['api_key'],
-        ],
-        CURLOPT_POSTFIELDS     => $payload,
-    ]);
+    // Anrop utan -w flaggan
+    $command = "curl -s -X POST " .
+        "-H 'Content-Type: application/json' " .
+        "-d " . escapeshellarg($payload) . " " .
+        escapeshellarg($url);
 
-    curl_exec($ch);
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    $result = shell_exec($command);
 
-    return $status === 200;
+    // Tomt resultat eller inget fel = success
+    // Om det finns ett fel returneras JSON med "error"
+    if ($result === null || $result === '' || $result === false) {
+        return true;
+    }
+
+    $data = json_decode($result, true);
+    if (isset($data['error'])) {
+        error_log('Centralbank deposit error: ' . $data['error']);
+        return false;
+    }
+
+    return true;
 }
