@@ -72,21 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nights = $checkInDate->diff($checkOutDate)->days;
 
     // ===== 2. Rumspris =====
-    $roomPrices = [
-        'budget' => 1,
-        'standard' => 2,
-        'luxury' => 4,
-    ];
+    $roomPrices = getRoomPrices();
     $roomPrice = $roomPrices[$data['room']];
     $roomTotal = $roomPrice * $nights;
 
     // ===== 3. Feature-priser =====
-    $tierPrices = [
-        'economy' => 2,
-        'basic' => 5,
-        'premium' => 10,
-        'superior' => 17,
-    ];
+    $tierPrices = getTierPrices();
 
     $featuresUsed = [];
     $featuresTotal = 0;
