@@ -14,6 +14,8 @@ require_once __DIR__ . '/app/functions/centralbank.php';
 
 require __DIR__ . '/views/header.php';
 
+$errors = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'guest_id' => $_POST['guest_id'] ?? null,
@@ -24,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'features' => $_POST['features'] ?? [],
     ];
 
+    // ===== Beräkna totalpris =====
     $totalPrice = calculateTotalPrice(
         $data['room'],
         $data['check_in'],
@@ -53,35 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (($_POST['action'] ?? null) === 'preview') {
-        require __DIR__ . '/views/booking-form.php';
-        require __DIR__ . '/views/footer.php';
-        exit;
-    }
-
-    if (($_POST['action'] ?? null) === 'book' && empty($data['transfer_code'])) {
-        $errors[] = 'Transfer code is required to make a reservation.';
-        require __DIR__ . '/views/booking-form.php';
-        require __DIR__ . '/views/footer.php';
-        exit;
-    }
-
-    // ===== 1. Datum → antal nätter =====
-    $checkInDate = new DateTime($data['check_in']);
-    $checkOutDate = new DateTime($data['check_out']);
-    $nights = $checkInDate->diff($checkOutDate)->days;
-
-    // ===== 2. Rumspris =====
-    $roomPrices = getRoomPrices();
-    $roomPrice = $roomPrices[$data['room']];
-    $roomTotal = $roomPrice * $nights;
-
-    // ===== 3. Feature-priser =====
-    $tierPrices = getTierPrices();
-
+    // ===== Bygg features för receipt =====
     $featuresUsed = [];
-    $featuresTotal = 0;
-
     if (!empty($data['features'])) {
         foreach ($data['features'] as $feature) {
             [$activity, $tier] = explode(':', $feature);
@@ -89,81 +65,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'activity' => $activity,
                 'tier' => $tier,
             ];
-            $featuresTotal += $tierPrices[$tier];
         }
     }
 
-    $guestId  = $data['guest_id'];
-    $checkIn  = $data['check_in'];
-    $checkOut = $data['check_out'];
+    // ===== Preview - visa bara pris =====
+    if (($_POST['action'] ?? null) === 'preview') {
+        require __DIR__ . '/views/booking-form.php';
+        require __DIR__ . '/views/footer.php';
+        exit;
+    }
 
-    // ===== Validera transferCode =====
+    // ===== Bokning =====
     if (($_POST['action'] ?? null) === 'book') {
-        $isValidPayment = centralbankValidateTransferCode(
-            $data['transfer_code'],
-            $totalPrice
-        );
 
-        if (!$isValidPayment) {
-            $errors[] = 'Invalid transfer code or incorrect amount. Expected: ' . $totalPrice . ' credits.';
-            require __DIR__ . '/views/booking-form.php';
-            require __DIR__ . '/views/footer.php';
-            exit;
+        // Validera transfer code finns
+        if (empty($data['transfer_code'])) {
+            $errors[] = 'Transfer code is required to make a reservation.';
+        }
+
+        // Validera transfer code belopp
+        if (empty($errors)) {
+            $isValidPayment = centralbankValidateTransferCode(
+                $data['transfer_code'],
+                $totalPrice
+            );
+            if (!$isValidPayment) {
+                $errors[] = 'Invalid transfer code or incorrect amount. Expected: ' . $totalPrice . ' credits.';
+            }
+        }
+
+        // Kontrollera om rum är ledigt
+        if (empty($errors) && !isRoomAvailable($db, $data['room'], $data['check_in'], $data['check_out'])) {
+            $errors[] = 'This room is not available for the selected dates.';
+        }
+
+        // Om inga fel - genomför bokning
+        if (empty($errors)) {
+            // Gör deposit
+            $depositSuccess = centralbankDeposit($data['transfer_code']);
+            if (!$depositSuccess) {
+                $errors[] = 'Payment failed during deposit.';
+            }
+        }
+
+        if (empty($errors)) {
+            // Skapa receipt
+            $receiptCreated = centralbankCreateReceipt(
+                $data['guest_id'],
+                $data['check_in'],
+                $data['check_out'],
+                $featuresUsed,
+                $totalPrice
+            );
+            if (!$receiptCreated) {
+                $errors[] = 'Could not create receipt.';
+            }
+        }
+
+        if (empty($errors)) {
+            // Spara bokning
+            $result = saveBooking($db, $data);
+            if ($result['success']) {
+                $checkIn = $data['check_in'];
+                $checkOut = $data['check_out'];
+                $room = $data['room'];
+                $features = $data['features'];
+                $guestId = $data['guest_id'];
+                $total = $totalPrice;
+
+                require __DIR__ . '/views/booking-result.php';
+                require __DIR__ . '/views/footer.php';
+                exit;
+            } else {
+                $errors = $result['errors'];
+            }
         }
     }
-
-    // ===== Kontrollera om rum är ledigt =====
-    if (!isRoomAvailable($db, $data['room'], $data['check_in'], $data['check_out'])) {
-        $errors[] = 'This room is not available for the selected dates.';
-        require __DIR__ . '/views/booking-form.php';
-        require __DIR__ . '/views/footer.php';
-        exit;
-    }
-
-    // ===== Gör deposit =====
-    $depositSuccess = centralbankDeposit($data['transfer_code']);
-
-    if (!$depositSuccess) {
-        $errors[] = 'Payment failed during deposit.';
-        require __DIR__ . '/views/booking-form.php';
-        require __DIR__ . '/views/footer.php';
-        exit;
-    }
-
-    // ===== Skapa receipt EFTER deposit =====
-    $receiptCreated = centralbankCreateReceipt(
-        $data['guest_id'],
-        $data['check_in'],
-        $data['check_out'],
-        $featuresUsed,
-        $totalPrice
-    );
-
-    if (!$receiptCreated) {
-        $errors[] = 'Could not create receipt.';
-        require __DIR__ . '/views/booking-form.php';
-        require __DIR__ . '/views/footer.php';
-        exit;
-    }
-
-    // ===== Spara bokning =====
-    $result = saveBooking($db, $data);
-
-    if ($result['success']) {
-        $checkIn = $data['check_in'];
-        $checkOut = $data['check_out'];
-        $room = $data['room'];
-        $features = $data['features'];
-        $guestId = $data['guest_id'];
-        $total = $totalPrice;
-
-        require __DIR__ . '/views/booking-result.php';
-    } else {
-        $errors = $result['errors'];
-        require __DIR__ . '/views/booking-form.php';
-    }
-} else {
-    require __DIR__ . '/views/booking-form.php';
 }
 
+require __DIR__ . '/views/booking-form.php';
 require __DIR__ . '/views/footer.php';
