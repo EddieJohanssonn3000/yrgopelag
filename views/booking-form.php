@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 ?>
 
-<h2>Boka rum</h2>
+<h2>Book a room</h2>
 
 <?php if (!empty($errors)): ?>
-    <ul>
-        <?php foreach ($errors as $error): ?>
-            <li><?= htmlspecialchars($error) ?></li>
-        <?php endforeach; ?>
-    </ul>
+    <div role="alert" aria-live="polite" class="error-messages">
+        <h3>Errors:</h3>
+        <ul>
+            <?php foreach ($errors as $error): ?>
+                <li><?= htmlspecialchars($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 <?php endif; ?>
 
 <form method="post" action="index.php">
@@ -32,6 +35,7 @@ declare(strict_types=1);
     <!-- Transfer_code -->
     <div>
         <label for="transfer_code">Transfer Code</label><br>
+        <small>Get your transfer code from the <a href="https://www.yrgopelag.se/centralbank" target="_blank" rel="noopener">Central Bank</a></small><br>
         <input
             type="text"
             id="transfer_code"
@@ -72,7 +76,7 @@ declare(strict_types=1);
 
     <!-- Room selection -->
     <fieldset>
-        <legend>Välj rum</legend>
+        <legend>Select room</legend>
 
         <label>
             <input type="radio" name="room" value="budget" <?= (($_POST['room'] ?? '') === 'budget') ? 'checked' : '' ?>
@@ -95,7 +99,7 @@ declare(strict_types=1);
 
     <!-- Features -->
     <fieldset>
-        <legend>Välj tillval / Features</legend>
+        <legend>Select features</legend>
 
         <!-- Water -->
         <h4>Water</h4>
