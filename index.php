@@ -31,6 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['features']
     );
 
+    // ===== Kolla paketpris =====
+    $packageDiscount = 0;
+    $activePackage = null;
+    if (!empty($data['room']) && !empty($data['features'])) {
+        $activePackage = checkForPackageDiscount($data['room'], $data['features']);
+        if ($activePackage) {
+            $packageDiscount = $activePackage['savings'];
+            $totalPrice = $totalPrice - $packageDiscount;
+        }
+    }
+
     // ===== Rabatt för återkommande gäster =====
     $discount = 0;
     $discountPercent = 0;

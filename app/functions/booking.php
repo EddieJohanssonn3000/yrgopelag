@@ -119,3 +119,51 @@ function calculateTotalPrice(
 
     return $total;
 }
+
+function getPackages(): array
+{
+    return [
+        'spooky_weekend' => [
+            'name' => 'Spooky Weekend Package',
+            'room' => 'luxury',
+            'features' => ['hotel:economy', 'hotel:basic'],
+            'original_price' => 11, // 4 + 2 + 5
+            'package_price' => 8,
+            'savings' => 3,
+        ],
+        'adventure_pack' => [
+            'name' => 'Adventure Package',
+            'room' => 'standard',
+            'features' => ['water:economy', 'wheels:basic'],
+            'original_price' => 9, // 2 + 2 + 5
+            'package_price' => 7,
+            'savings' => 2,
+        ],
+    ];
+}
+
+function checkForPackageDiscount(string $room, array $selectedFeatures): ?array
+{
+    $packages = getPackages();
+
+    foreach ($packages as $package) {
+        if ($package['room'] !== $room) {
+            continue;
+        }
+
+        // Kolla om alla paketets features är valda
+        $hasAllFeatures = true;
+        foreach ($package['features'] as $requiredFeature) {
+            if (!in_array($requiredFeature, $selectedFeatures)) {
+                $hasAllFeatures = false;
+                break;
+            }
+        }
+
+        if ($hasAllFeatures) {
+            return $package;
+        }
+    }
+
+    return null;
+}

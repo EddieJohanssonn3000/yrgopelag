@@ -204,12 +204,26 @@ declare(strict_types=1);
 
     <br>
 
+    <!-- Paket-info -->
+    <fieldset>
+        <legend>Available Packages</legend>
+        <p><strong>Spooky Weekend Package:</strong> Luxury + Haunted house + Ghost tour = 8$ (save 3$)</p>
+        <p><strong>Adventure Package:</strong> Standard + Pool + Bicycle = 7$ (save 2$)</p>
+    </fieldset>
+
+    <br>
+
     <?php if (isset($totalPrice)): ?>
         <div class="price-preview">
             <h3>Total price</h3>
+            <?php if (isset($activePackage) && $activePackage): ?>
+                <p><?= htmlspecialchars($activePackage['name']) ?>! Save <?= $activePackage['savings'] ?>$!</p>
+            <?php endif; ?>
             <?php if (isset($discountPercent) && $discountPercent > 0): ?>
                 <p>Returning guest! <?= $discountPercent ?>% discount applied!</p>
-                <p><s><?= $totalPrice + $discount ?> $</s></p>
+            <?php endif; ?>
+            <?php if ((isset($activePackage) && $activePackage) || (isset($discountPercent) && $discountPercent > 0)): ?>
+                <p><s><?= $totalPrice + ($packageDiscount ?? 0) + ($discount ?? 0) ?> $</s></p>
             <?php endif; ?>
             <p><strong><?= $totalPrice ?> $</strong></p>
         </div>
