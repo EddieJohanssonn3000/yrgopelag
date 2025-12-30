@@ -31,6 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['features']
     );
 
+    // ===== Rabatt för återkommande gäster =====
+    $discount = 0;
+    $discountPercent = 0;
+    if (!empty($data['guest_id'])) {
+        $discountPercent = getDiscountPercent($db, $data['guest_id']);
+        if ($discountPercent > 0) {
+            $discount = (int) round($totalPrice * $discountPercent / 100);
+            $totalPrice = $totalPrice - $discount;
+        }
+    }
+
     if (($_POST['action'] ?? null) === 'preview') {
         require __DIR__ . '/views/booking-form.php';
         require __DIR__ . '/views/footer.php';

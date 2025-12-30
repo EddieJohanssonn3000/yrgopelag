@@ -70,6 +70,22 @@ function isRoomAvailable(PDO $db, string $room, string $checkIn, string $checkOu
     return $stmt->fetchColumn() === 0;
 }
 
+function isReturningGuest(PDO $db, string $guestId): bool
+{
+    $stmt = $db->prepare('SELECT COUNT(*) FROM bookings WHERE guest_id = :guest_id');
+    $stmt->execute([':guest_id' => $guestId]);
+
+    return $stmt->fetchColumn() > 0;
+}
+
+function getDiscountPercent(PDO $db, string $guestId): int
+{
+    if (isReturningGuest($db, $guestId)) {
+        return 10; // 10% rabatt för återkommande gäster
+    }
+    return 0;
+}
+
 function calculateTotalPrice(
     string $room,
     string $checkIn,

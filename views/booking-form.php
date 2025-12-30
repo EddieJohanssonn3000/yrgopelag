@@ -207,6 +207,10 @@ declare(strict_types=1);
     <?php if (isset($totalPrice)): ?>
         <div class="price-preview">
             <h3>Total price</h3>
+            <?php if (isset($discountPercent) && $discountPercent > 0): ?>
+                <p>Returning guest! <?= $discountPercent ?>% discount applied!</p>
+                <p><s><?= $totalPrice + $discount ?> $</s></p>
+            <?php endif; ?>
             <p><strong><?= $totalPrice ?> $</strong></p>
         </div>
     <?php endif; ?>
