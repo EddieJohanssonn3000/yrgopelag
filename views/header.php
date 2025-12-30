@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPOOKY ISLAND</title>
-    <link rel="stylesheet" href="./assets/styles/header.css?ver=1">
+    <link rel="stylesheet" href="./assets/styles/header.css?ver=2">
 </head>
 
 <body>
-    <header>
-        <h1>SPOOKY HOTEL</h1>
+    <header class="hero">
+        <div class="hero-content">
+
+        </div>
     </header>
     <nav>
         <a href="index.php">HOME</a>
@@ -19,3 +21,6 @@
         <a href="#LUXURY">LUXURY ROOM</a>
         <a href="#BOOKING">BOOKING</a>
     </nav>
+</body>
+
+</html>
