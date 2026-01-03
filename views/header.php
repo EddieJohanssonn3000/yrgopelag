@@ -7,6 +7,7 @@
     <title>SPOOKY ISLAND</title>
     <link rel="stylesheet" href="./assets/styles/header.css?ver=2">
     <link rel="stylesheet" href="./assets/styles/main.css?ver=1">
+    <link rel="stylesheet" href="./assets/styles/footer.css?ver=1">
 </head>
 
 <body>

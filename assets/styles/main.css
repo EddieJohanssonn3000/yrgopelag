@@ -1,6 +1,6 @@
 .welcome {
-    background: #1a1a1a;
-    color: white;
+    background: #1a1a2e;
+    color: #f44336ac;
     padding: 3rem;
     text-align: center;
     margin-bottom: 2rem;
@@ -16,12 +16,13 @@
     margin: 0 auto;
     line-height: 1.6;
     font-size: 1.5rem;
+    color: #bdbdbd;
 }
 
 /* ===== Två-kolumn layout ===== */
 .booking-container {
     display: flex;
-    gap: 2rem;
+    gap: 4rem;
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
@@ -108,16 +109,16 @@
 
 /* ===== Rumskort ===== */
 .booking-right h2 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
     text-align: center;
 }
 
 .room-card {
-    background: #f9f9f9;
+    background: #3d3d3d;
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .room-card img {
@@ -147,7 +148,7 @@
 
 .room-card p {
     padding: 0 1rem 1rem;
-    color: #666;
+    color: #ccc;
 }
 
 /* ===== Error messages ===== */

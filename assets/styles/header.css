@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+body {
+    background: #1a1a2e;
+    color: #f44336ac;
+}
+
 h1 {
     display: flex;
     text-align: center;
@@ -15,17 +20,19 @@ nav {
     background: #1a1a1a;
     padding: 1rem;
     text-align: center;
+    border-bottom: 2px solid #f44336ac;
+    
 }
 
 nav a {
-    color: white;
     text-decoration: none;
     margin: 0 1rem;
     padding: 0.5rem 1rem;
+    color: #bdbdbd;
 }
 
 nav a:hover {
-    background: #333;
+    background: #4d4d4d;
     border-radius: 4px;
 }
 
@@ -33,7 +40,7 @@ nav a:hover {
     background-image: url('../images/Visithero.jpg');
     background-size: cover;
     background-position: center;
-    height: 630px;
+    height: 650px;
     display: flex;
     align-items: center;
     justify-content: center;
