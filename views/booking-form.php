@@ -6,7 +6,8 @@ declare(strict_types=1);
 
 <section class="welcome">
     <h2>Welcome to Spooky Island</h2>
-    <p>Experience the most haunted hotel in the archipelago. Our rooms come with guaranteed ghost sightings, creaky floors, and mysterious sounds at night.</p>
+    <p>Experience the most haunted hotel in the archipelago. Our rooms come with guaranteed ghost sightings, creaky floors, and mysterious sounds at night. <br> Book if you dare... </p>
+
 </section>
 
 <?php if (!empty($errors)): ?>
@@ -28,7 +29,7 @@ declare(strict_types=1);
         <form method="post" action="index.php">
             <!-- Guest_id -->
             <div>
-                <label for="guest_id">Name (guest ID)</label>
+                <label for="guest_id" class="label-red">Name (guest ID)</label>
                 <input
                     type="text"
                     id="guest_id"
@@ -39,8 +40,8 @@ declare(strict_types=1);
 
             <!-- Transfer_code -->
             <div>
-                <label for="transfer_code">Transfer Code</label>
-                <small>Get your transfer code from the <a href="https://www.yrgopelago.se/centralbank" target="_blank" rel="noopener">Central Bank</a></small>
+                <label for="transfer_code" class="label-red">Transfer Code</label>
+                <small>Get your transfer code from the <a href="https://www.yrgopelag.se/centralbank" target="_blank" rel="noopener">Central Bank</a></small>
                 <input
                     type="text"
                     id="transfer_code"
@@ -49,7 +50,7 @@ declare(strict_types=1);
 
             <!-- Check-in -->
             <div>
-                <label for="check_in">Check-in</label>
+                <label for="check_in" class="label-red">Check-in</label>
                 <input
                     type="date"
                     id="check_in"
@@ -62,7 +63,7 @@ declare(strict_types=1);
 
             <!-- Check-out -->
             <div>
-                <label for="check_out">Check-out</label>
+                <label for="check_out" class="label-red">Check-out</label>
                 <input
                     type="date"
                     id="check_out"
@@ -186,8 +187,8 @@ declare(strict_types=1);
             <!-- Packages -->
             <fieldset>
                 <legend>Available Packages</legend>
-                <p><strong>Spooky Weekend Package:</strong> Luxury + Haunted house + Ghost tour = 8$ (save 3$)</p>
-                <p><strong>Adventure Package:</strong> Standard + Pool + Bicycle = 7$ (save 2$)</p>
+                <p class="package-info"><strong>Spooky Weekend Package:</strong> Luxury + Haunted house + Ghost tour = 8$ (save 3$)</p>
+                <p class="package-info"><strong>Adventure Package:</strong> Standard + Pool + Bicycle = 7$ (save 2$)</p>
             </fieldset>
 
             <?php if (isset($totalPrice)): ?>

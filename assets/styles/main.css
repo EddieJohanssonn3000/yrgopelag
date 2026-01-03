@@ -3,7 +3,6 @@
     color: #f44336ac;
     padding: 3rem;
     text-align: center;
-    margin-bottom: 2rem;
 }
 
 .welcome h2 {
@@ -45,6 +44,8 @@
 .booking-left label {
     display: block;
     margin-bottom: 0.5rem;
+    color: #bdbdbd;
+
 }
 
 .booking-left input[type="text"],
@@ -71,6 +72,10 @@
 .booking-left h4 {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+}
+
+.booking-left .label-red {
+    color:  #f44336ac;
 }
 
 .buttons {
@@ -139,7 +144,7 @@
 }
 
 .room-info .price {
-    background: #e74c3c;
+    background: #f44336ac;
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 4px;
@@ -154,7 +159,7 @@
 /* ===== Error messages ===== */
 .error-messages {
     background: #ffe6e6;
-    border: 1px solid #cc0000;
+    border: 1px solid #f44336ac;
     border-radius: 8px;
     padding: 1rem;
     margin: 1rem auto;
@@ -162,10 +167,19 @@
 }
 
 .error-messages h3 {
-    color: #cc0000;
+    color: #f44336ac;
     margin-bottom: 0.5rem;
 }
 
 .error-messages li {
-    color: #cc0000;
+    color: #f44336ac;
 }
+
+.package-info {
+    color: #bdbdbd;
+}
+
+.package-info strong {
+    color: #f44336ac;
+}
+
