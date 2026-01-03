@@ -33,7 +33,7 @@ nav a:hover {
     background-image: url('../images/Visithero.jpg');
     background-size: cover;
     background-position: center;
-    height: 750px;
+    height: 630px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,7 +47,7 @@ nav a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    
 }
 
 .hero-content {
