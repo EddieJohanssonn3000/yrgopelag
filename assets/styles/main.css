@@ -98,14 +98,14 @@
 
 /* ===== Pris-preview ===== */
 .price-preview {
-    background: #f0f0f0;
+    background: #555;
     padding: 1rem;
     border-radius: 8px;
     margin-top: 1rem;
 }
 
 .price-preview .discount {
-    color: green;
+    color: rgba(4, 246, 4, 0.941);
 }
 
 .price-preview .total {
@@ -180,6 +180,42 @@
 }
 
 .package-info strong {
+    color: #f44336ac;
+}
+
+.loyalty-info {
+    background: #1a1a2e;
+    color: #f0f0f0;
+    padding: 2rem;
+    text-align: center;
+    border-top: 2px solid #f44336ac;
+}
+
+.loyalty-info h3 {
+    color: #f44336ac;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.loyalty-info p {
+    margin-bottom: 1rem;
+    color: #bdbdbd;
+}
+
+.loyalty-info ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.loyalty-info li {
+    margin: 0.5rem 0;
+    color: #bdbdbd;
+}
+
+.loyalty-info li strong {
     color: #f44336ac;
 }
 

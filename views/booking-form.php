@@ -7,7 +7,16 @@ declare(strict_types=1);
 <section class="welcome">
     <h2>Welcome to Spooky Island</h2>
     <p>Experience the most haunted hotel in the archipelago. Our rooms come with guaranteed ghost sightings, creaky floors, and mysterious sounds at night. <br> Book if you dare... </p>
+</section>
 
+<section class="loyalty-info">
+    <h3>Returning Guest Discount</h3>
+    <p>We reward our brave returning guests! The more you stay, the more you save:</p>
+    <ul>
+        <li><strong>2+ bookings:</strong> 5% discount</li>
+        <li><strong>5+ bookings:</strong> 10% discount</li>
+        <li><strong>10+ bookings:</strong> 15% discount</li>
+    </ul>
 </section>
 
 <?php if (!empty($errors)): ?>
