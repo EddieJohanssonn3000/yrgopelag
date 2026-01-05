@@ -1,0 +1,75 @@
+/* ===== Booking Result ===== */
+.booking-result {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.result-card {
+    background: #2d2d2d;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.result-card h2 {
+    color: #f44336ac;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.success-message {
+    color: #f44336ac;
+    margin-bottom: 1.5rem;
+}
+
+.booking-details,
+.booking-features {
+    background: #3d3d3d;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.booking-details h3,
+.booking-features h3 {
+    color: #f44336ac;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.booking-details ul,
+.booking-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.booking-details li,
+.booking-features li {
+    color: #bdbdbd;
+    padding: 0.25rem 0;
+}
+
+.booking-details li strong,
+.booking-features li strong {
+    color: #f0f0f0;
+}
+
+.btn-new-booking {
+    display: inline-block;
+    background: #f44336ac;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.btn-new-booking:hover {
+    background: #c0392b;
+}

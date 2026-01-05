@@ -83,16 +83,6 @@ function centralbankCreateReceipt(
 
     curl_close($ch);
 
-    // 🔍 DEBUG – kommentera bort sen
-    // if ($status !== 200) {
-    //     echo '<pre>';
-    //     echo "HTTP STATUS: $status\n";
-    //     echo "CURL ERROR: $error\n";
-    //     echo "RESPONSE:\n";
-    //     var_dump($response);
-    //     die;
-    // }
-
     return true;
 }
 
