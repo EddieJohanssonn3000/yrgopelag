@@ -50,6 +50,7 @@ function centralbankCreateReceipt(
         'departure_date' => $departureDate,
         'features_used' => $featuresUsed,
         'total_cost' => $totalCost,
+        'star_rating' => 3,
     ];
 
     $ch = curl_init($url);
