@@ -2,126 +2,109 @@
 
 declare(strict_types=1);
 
-function centralbankValidateTransferCode(
-    string $transferCode,
-    int $amount
-): bool {
+function centralbankValidateTransferCode(string $transferCode, int $totalCost): bool
+{
     $config = require __DIR__ . '/../config/centralbank.php';
 
-    $payload = json_encode([
+    $url = $config['base_url'] . '/transferCode';
+
+    $data = [
         'transferCode' => $transferCode,
-        'totalCost' => $amount,
-    ]);
+        'totalCost' => $totalCost,
+    ];
 
-    $ch = curl_init($config['base_url'] . '/transferCode');
-
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_HTTPHEADER => [
-            'Content-Type: application/json',
-        ],
-        CURLOPT_POSTFIELDS     => $payload,
-    ]);
-
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
     $response = curl_exec($ch);
-    $status   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-
-    if ($status !== 200) {
-        error_log('Centralbank HTTP error: ' . $response);
+    if ($httpCode !== 200 || !$response) {
         return false;
     }
 
-    $data = json_decode($response, true);
-
-
-    if (!is_array($data) || ($data['status'] ?? null) !== 'success') {
-        error_log('Centralbank validation failed: ' . $response);
-        return false;
-    }
-
-    return true;
+    $result = json_decode($response, true);
+    return isset($result['status']) && $result['status'] === 'success';
 }
-
-
 
 function centralbankCreateReceipt(
-    string $guestId,
-    string $checkIn,
-    string $checkOut,
+    string $guestName,
+    string $arrivalDate,
+    string $departureDate,
     array $featuresUsed,
-    int $totalPrice
+    int $totalCost
 ): bool {
     $config = require __DIR__ . '/../config/centralbank.php';
 
-    $payload = json_encode([
-        'user'           => $config['user'],
-        'api_key'        => $config['api_key'],
-        'guest_name'     => $guestId,
-        'arrival_date'   => $checkIn,
-        'departure_date' => $checkOut,
-        'total_price'    => $totalPrice,
-        'features_used'  => $featuresUsed,
-        'star_rating'    => 3,
-    ]);
+    $url = $config['base_url'] . '/receipt';
 
-    $ch = curl_init($config['base_url'] . '/receipt');
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
-        CURLOPT_POSTFIELDS     => $payload,
-    ]);
+    $data = [
+        'user' => $config['user'],
+        'api_key' => $config['api_key'],
+        'guest_name' => $guestName,
+        'arrival_date' => $arrivalDate,
+        'departure_date' => $departureDate,
+        'features_used' => $featuresUsed,
+        'total_cost' => $totalCost,
+    ];
 
-    // 🔥 HÄR ÄR SKILLNADEN
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
     $response = curl_exec($ch);
-    $status   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error    = curl_error($ch);
-
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+
+    if ($httpCode !== 200) {
+        error_log('Centralbank receipt error: HTTP ' . $httpCode);
+        return false;
+    }
+
+    $result = json_decode($response, true);
+    if (isset($result['error'])) {
+        error_log('Centralbank receipt error: ' . $result['error']);
+        return false;
+    }
 
     return true;
 }
 
-
-
-function centralbankDeposit(
-    string $transferCode
-): bool {
+function centralbankDeposit(string $transferCode): bool
+{
     $config = require __DIR__ . '/../config/centralbank.php';
-
-    if (empty($config['user'])) {
-        error_log('Centralbank configuration error: Missing user');
-        return false;
-    }
-
-    $payload = json_encode([
-        'transferCode' => $transferCode,
-        'user' => $config['user'],
-    ]);
 
     $url = $config['base_url'] . '/deposit';
 
-    // Anrop utan -w flaggan
-    $command = "curl -s -X POST " .
-        "-H 'Content-Type: application/json' " .
-        "-d " . escapeshellarg($payload) . " " .
-        escapeshellarg($url);
+    $data = [
+        'user' => $config['user'],
+        'transferCode' => $transferCode,
+    ];
 
-    $result = shell_exec($command);
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-    // Tomt resultat eller inget fel = success
-    // Om det finns ett fel returneras JSON med "error"
-    if ($result === null || $result === '' || $result === false) {
-        return true;
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode !== 200) {
+        error_log('Centralbank deposit error: HTTP ' . $httpCode);
+        return false;
     }
 
-    $data = json_decode($result, true);
-    if (isset($data['error'])) {
-        error_log('Centralbank deposit error: ' . $data['error']);
+    $result = json_decode($response, true);
+    if (isset($result['error'])) {
+        error_log('Centralbank deposit error: ' . $result['error']);
         return false;
     }
 
