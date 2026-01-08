@@ -172,23 +172,23 @@ declare(strict_types=1);
 
                 <h4>Spooky</h4>
                 <label>
-                    <input type="checkbox" name="features[]" value="hotel:economy"
-                        <?= in_array('hotel:economy', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+                    <input type="checkbox" name="features[]" value="hotel-specific:economy"
+                        <?= in_array('hotel-specific:economy', $_POST['features'] ?? []) ? 'checked' : '' ?>>
                     Haunted house access (Economy $2)
                 </label>
                 <label>
-                    <input type="checkbox" name="features[]" value="hotel:basic"
-                        <?= in_array('hotel:basic', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+                    <input type="checkbox" name="features[]" value="hotel-specific:basic"
+                        <?= in_array('hotel-specific:basic', $_POST['features'] ?? []) ? 'checked' : '' ?>>
                     Ghost tour (Basic $5)
                 </label>
                 <label>
-                    <input type="checkbox" name="features[]" value="hotel:premium"
-                        <?= in_array('hotel:premium', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+                    <input type="checkbox" name="features[]" value="hotel-specific:premium"
+                        <?= in_array('hotel-specific:premium', $_POST['features'] ?? []) ? 'checked' : '' ?>>
                     Séance with medium (Premium $10)
                 </label>
                 <label>
-                    <input type="checkbox" name="features[]" value="hotel:superior"
-                        <?= in_array('hotel:superior', $_POST['features'] ?? []) ? 'checked' : '' ?>>
+                    <input type="checkbox" name="features[]" value="hotel-specific:superior"
+                        <?= in_array('hotel-specific:superior', $_POST['features'] ?? []) ? 'checked' : '' ?>>
                     Cursed master suite (Superior $17)
                 </label>
             </fieldset>

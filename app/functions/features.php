@@ -42,7 +42,7 @@ function getAvailableFeatures(): array
             'trike' => 'premium',
             'four_wheeled_motorized_beast' => 'superior',
         ],
-        'hotel_specific' => [
+        'hotel-specific' => [
             'haunted_house' => 'economy',
             'ghost_tour' => 'basic',
             'seance_with_medium' => 'premium',

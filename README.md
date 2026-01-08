@@ -13,6 +13,29 @@ Fokus i projektet ligger på fungerande backend-logik, korrekt databashantering 
 * Visa bokningsresultat för användaren
 * Följa givna regler kring features, stjärnor och bokningsflöde
 
+# Centralbank-API
+
+Projektet kommunicerar med Yrgopelags Centralbank via ett REST-API för att:
+
+* Validera betalning (deposit)
+* Skapa kvitto (receipt) för genomförda bokningar
+
+Vid skapande av receipt skickas endast följande data för valda tillval (features):
+
+* activity (t.ex. water, games, wheels, hotel-specific)
+* tier (economy, basic, premium, superior)
+
+API:t validerar features baserat på activity + tier, och projektet använder konsekvent dessa värden utan extra speciallogik i backend.
+
+# Features & tillval
+
+Användaren kan välja tillval (features) uppdelade i olika kategorier såsom water, games, wheels och hotel-specific.
+Varje feature har en tier som påverkar priset.
+
+Alla tillval skickas till Centralbank-API:t som:
+{ activity, tier }
+enligt API:ts datamodell.
+
 
 # Projektstruktur
 
