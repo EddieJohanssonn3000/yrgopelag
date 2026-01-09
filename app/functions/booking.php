@@ -126,7 +126,7 @@ function getPackages(): array
         'spooky_weekend' => [
             'name' => 'Spooky Weekend Package',
             'room' => 'luxury',
-            'features' => ['hotel:economy', 'hotel:basic'],
+            'features' => ['hotel-specific:economy', 'hotel-specific:basic'],
             'original_price' => 11, // 4 + 2 + 5
             'package_price' => 8,
             'savings' => 3,
