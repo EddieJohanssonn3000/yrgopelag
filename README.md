@@ -39,6 +39,22 @@ enligt API:ts datamodell.
 
 # Projektstruktur
 
+# Daniella’s feedback – great job! These are just some improvement suggestions.
+
+CSS is really good but you could improve and save the colors in variables.
+
+The room images and information could be stored in an array and generated dynamically, which would make the code more maintainable and easier to update.
+
+The layout works well, but the semantic structure could be improved by replacing div elements with more meaningful HTML elements such as article, figure, and header, which would improve accessibility and content structure.
+
+JavaScript could be used to connect the room categories in the navbar with the corresponding room sections on the page, so that clicking a room link (for example “Budget Room”) scrolls the user to the correct room information.
+       
+It could be an improvement to make the star rating dynamic instead of hardcoded, allowing it to be updated more easily.
+
+I see some error messages on Swedish, maybe use same language through the hole code ex. ($errors[] = 'Utcheckningsdatum måste vara efter incheckningsdatum.’;)
+
+To be safe and protected of your database I would recommend you to store your database file in .gitignore.
+
 Projektet är uppdelat för att tydligt separera backend-logik och presentation.
 
 # Git & arbetsflöde
