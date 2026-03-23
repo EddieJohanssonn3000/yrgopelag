@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'features' => $_POST['features'] ?? [],
     ];
 
-    // ===== Beräkna totalpris =====
+    // ===== Totalprice calculation =====
     $totalPrice = calculateTotalPrice(
         $data['room'],
         $data['check_in'],
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['features']
     );
 
-    // ===== Kolla paketpris =====
+    // ===== Check packageprice =====
     $packageDiscount = 0;
     $activePackage = null;
     if (!empty($data['room']) && !empty($data['features'])) {
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // ===== Rabatt för återkommande gäster =====
+    // ===== Discount for returning guests =====
     $discount = 0;
     $discountPercent = 0;
     if (!empty($data['guest_id'])) {
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // ===== Bygg features för receipt =====
+    // ===== Build features for recipies =====
     $featuresUsed = [];
     if (!empty($data['features'])) {
         foreach ($data['features'] as $feature) {
@@ -68,22 +68,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // ===== Preview - visa bara pris =====
+    // ===== Preview - only show price =====
     if (($_POST['action'] ?? null) === 'preview') {
         require __DIR__ . '/views/booking-form.php';
         require __DIR__ . '/views/footer.php';
         exit;
     }
 
-    // ===== Bokning =====
+    // ===== Booking =====
     if (($_POST['action'] ?? null) === 'book') {
 
-        // Validera transfer code finns
+        // Validate if transfer code exists 
         if (empty($data['transfer_code'])) {
             $errors[] = 'Transfer code is required to make a reservation.';
         }
 
-        // Validera transfer code belopp
+        // Validate transfer-code amount 
         if (empty($errors)) {
             $isValidPayment = centralbankValidateTransferCode(
                 $data['transfer_code'],
@@ -94,14 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Kontrollera om rum är ledigt
+        // Check if rooms are available 
         if (empty($errors) && !isRoomAvailable($db, $data['room'], $data['check_in'], $data['check_out'])) {
             $errors[] = 'This room is not available for the selected dates.';
         }
 
-        // Om inga fel - genomför bokning
+        // If no errors, go through with booking 
         if (empty($errors)) {
-            // Gör deposit
+            // make diposit
             $depositSuccess = centralbankDeposit($data['transfer_code']);
             if (!$depositSuccess) {
                 $errors[] = 'Payment failed during deposit.';
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
-            // Skapa receipt
+            // Create recipe 
             $receiptCreated = centralbankCreateReceipt(
                 $data['guest_id'],
                 $data['check_in'],
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($errors)) {
-            // Spara bokning
+            // Save booking 
             $result = saveBooking($db, $data);
             if ($result['success']) {
                 $checkIn = $data['check_in'];
@@ -145,3 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require __DIR__ . '/views/booking-form.php';
 require __DIR__ . '/views/footer.php';
+
+
+// I will find you and i will...
